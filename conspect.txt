@@ -1,0 +1,5 @@
+Настройка реакта - установка реактстрапа и поппера
+yarn add bootstrap@4.0.0
+yarn add reactstrap@5.0.0
+yarn add react-popper@0.9.2
+https://www.coursera.org/learn/front-end-react/supplement/Cb0se/exercise-instructions-configuring-your-react-application
