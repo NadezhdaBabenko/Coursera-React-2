@@ -1,62 +1,51 @@
 import React, { Component } from "react"; // создает компонент - потом его надо импортировать в App.js
-import { Media } from "reactstrap"; // импортировать медиа-компонент из reactstrap <Media> котороые мы использвем
+import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from "reactstrap"; // импортировать медиа-компонент из reactstrap <Media> котороые мы использвем
 
 class Menu extends Component { //добавляет новый компонент в приложение реакт - Menu - имя компонента
 
     constructor(props) {
         super(props); //это требуется всякий раз, когда вы определяете компонент класса
         // состояние state для моего компонента - хранит в себе свойства, относящиеся к этому компоненту, которые мы можем использовать.
-        this.state = {
-            dishes: [ //свойство
-                {
-                  id: 0, // объект JS
-                  name:'Uthappizza',
-                  image: 'assets/images/uthappizza.png',
-                  category: 'mains',
-                  label:'Hot',
-                  price:'4.99',
-                  description:'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.'                        },
-               {
-                  id: 1,
-                  name:'Zucchipakoda',
-                  image: 'assets/images/zucchipakoda.png',
-                  category: 'appetizer',
-                  label:'',
-                  price:'1.99',
-                  description:'Deep fried Zucchini coated with mildly spiced Chickpea flour batter accompanied with a sweet-tangy tamarind sauce'                        },
-               {
-                  id: 2,
-                  name:'Vadonut',
-                  image: 'assets/images/vadonut.png',
-                  category: 'appetizer',
-                  label:'New',
-                  price:'1.99',
-                  description:'A quintessential ConFusion experience, is it a vada or is it a donut?'                        },
-               {
-                  id: 3,
-                  name:'ElaiCheese Cake',
-                  image: 'assets/images/elaicheesecake.png',
-                  category: 'dessert',
-                  label:'',
-                  price:'2.99',
-                  description:'A delectable, semi-sweet New York Style Cheese Cake, with Graham cracker crust and spiced with Indian cardamoms'                        }
-               ],
+        this.state = {// изменить state можно только отдельно через .setState()
+            selectedDish: null
+        }
+    }
+//onClick={() => this.onDishSelect(dish)} при клике на каждую карточку вызывается ф-ция
+    onDishSelect(dish) {
+        this.setState({ selectedDish: dish }); //меняем состояние
+    }
+//отрисовываем и как параметр принимаем (this.state.selectedDish)
+    renderDish(dish) {
+        if(dish != null) {
+            return (
+                <Card>
+                    <CardImg width="100%" src={dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>
+                            {dish.description}
+                        </CardText>
+                    </CardBody>
+                </Card>
+            );
+        } 
+        else {
+            return (
+                <div></div> //ничего не отрисуется на экране
+            )
         }
     }
 
     render() { // любой компонент должен содержать метод Рэндэр - отрисовывает, отображает этот компонент
-        const menu = this.state.dishes.map((dish) => { // прохожу по всему массиву dishes и итерации по каждому dish и отрисовывает элемент
-            return (//читай документацию reactstrap про <Media tag="li"> 
-                <div key={dish.id} className="col-12 mt-5">
-                    <Media tag="li"> 
-                        <Media left middle>
-                            <Media object src={dish.image} alt={dish.name} />
-                        </Media>
-                        <Media body className="ml-5">
-                            <Media heading>{dish.name}</Media>
-                            <p>{dish.description}</p>
-                        </Media>
-                    </Media>
+        const menu = this.props.dishes.map((dish) => { // прохожу по всему массиву dishes и итерации по каждому dish и отрисовывает элемент
+            return (//читай документацию reactstrap про <Media tag="li">; важно прописывать key={dish.id} для каждого элемента массива
+                <div key={dish.id} className="col-12 col-md-5 m-1"> 
+                    <Card onClick={() => this.onDishSelect(dish)}> 
+                        <CardImg width="100%" src={dish.image} alt={dish.name} />
+                        <CardImgOverlay>
+                            <CardTitle>{dish.name}</CardTitle>
+                        </CardImgOverlay>
+                    </Card>
                 </div>
             );
         }); //Я собираюсь включить переменную JavaScript под названием {menu}, которая определяется как массив - дальше метод .map -пробегает по всем элементам массива. дальше определяется что вернется после этого метода
@@ -64,9 +53,10 @@ class Menu extends Component { //добавляет новый компонен�
         return ( // выводишь каждый элемент const menu
             <div className="container"> 
                 <div className="row">
-                    <Media list> 
-                        {menu} 
-                    </Media> 
+                    {menu} 
+                </div>
+                <div className="row">
+                    {this.renderDish(this.state.selectedDish)}
                 </div>
             </div>
         );
