@@ -1,5 +1,7 @@
 import React, { Component } from "react"; // создает компонент - потом его надо импортировать в App.js
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from "reactstrap"; // импортировать медиа-компонент из reactstrap <Media> котороые мы использвем
+import Dishdetail from './DishdetailComponent';
+// import {DISHES} from '../shared/dishes'; 
 
 class Menu extends Component { //добавляет новый компонент в приложение реакт - Menu - имя компонента
 
@@ -10,30 +12,10 @@ class Menu extends Component { //добавляет новый компонен�
             selectedDish: null
         }
     }
+
 //onClick={() => this.onDishSelect(dish)} при клике на каждую карточку вызывается ф-ция
     onDishSelect(dish) {
         this.setState({ selectedDish: dish }); //меняем состояние
-    }
-//отрисовываем и как параметр принимаем (this.state.selectedDish)
-    renderDish(dish) {
-        if(dish != null) {
-            return (
-                <Card>
-                    <CardImg width="100%" src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>
-                            {dish.description}
-                        </CardText>
-                    </CardBody>
-                </Card>
-            );
-        } 
-        else {
-            return (
-                <div></div> //ничего не отрисуется на экране
-            )
-        }
     }
 
     render() { // любой компонент должен содержать метод Рэндэр - отрисовывает, отображает этот компонент
@@ -49,15 +31,14 @@ class Menu extends Component { //добавляет новый компонен�
                 </div>
             );
         }); //Я собираюсь включить переменную JavaScript под названием {menu}, которая определяется как массив - дальше метод .map -пробегает по всем элементам массива. дальше определяется что вернется после этого метода
-        
+        //<Dishdetail data={this.state}/>  - передаешь в дочерний компонент state текущий
         return ( // выводишь каждый элемент const menu
             <div className="container"> 
                 <div className="row">
                     {menu} 
                 </div>
-                <div className="row">
-                    {this.renderDish(this.state.selectedDish)}
-                </div>
+                <Dishdetail data={this.state}/> 
+
             </div>
         );
     }
