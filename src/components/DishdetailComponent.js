@@ -1,19 +1,8 @@
-import React, { Component } from "react"; // создает компонент - потом его надо импортировать в App.js
+import React from "react"; // создает компонент - потом его надо импортировать в App.js
 import { Card, CardImg, CardText, CardBody, CardTitle } from "reactstrap"; 
 
-class Dishdetail extends Component {
-
-    constructor(props) {
-        super(props); //это требуется всякий раз, когда вы определяете компонент класса
-        // состояние state для моего компонента - хранит в себе свойства, относящиеся к этому компоненту, которые мы можем использовать.
-        this.state = {
-            // принимаешь state из родительского компонента
-            //https://www.pluralsight.com/guides/how-to-send-state-of-current-component-as-a-parameter-to-another-external-method-using-react
-        }
-    }
-
     //отрисовываем и как параметр принимаем state из род. кмп
-    renderDish(dish) {
+    function RenderDish({dish}) {
         if(dish != null) {
             return (
                 <div className="col-12 col-md-5 m-1">
@@ -36,7 +25,7 @@ class Dishdetail extends Component {
         }
     }
 
-    fillComments = (dish) => {
+    function FillComments({dish}) {
         let commentsArr = [];
         for(let i = 0; i < dish.comments.length; i++) {
             let comment = dish.comments[i].comment;
@@ -48,13 +37,13 @@ class Dishdetail extends Component {
         return commentsArr;
     }
 
-    renderComments(dish) {
+    function RenderComments({dish}) {
         if(dish != null) {
             return (
                 <div className="col-12 col-md-5 m-1">
                     <h4>Comments</h4>
                     <ul className="pl-0" style={{ listStyleType: "none" }}>
-                        {this.fillComments(dish)}
+                        <FillComments dish={dish}/>
                     </ul>
                 </div>
             );
@@ -64,21 +53,17 @@ class Dishdetail extends Component {
                 <div></div> //ничего не отрисуется на экране
             )
         }
-
-
     }
 
-    render() { // любой компонент должен содержать метод Рэндэр - отрисовывает, отображает этот компонент  
+    const Dishdetail = (props) => { // любой компонент должен содержать метод Рэндэр - отрисовывает, отображает этот компонент  
         return (
             <div className="container">
                 <div className="row"> 
-                    {this.renderDish(this.props.dish)}
-                    {this.renderComments(this.props.dish)} 
+                    <RenderDish dish={props.dish} />
+                    <RenderComments dish={props.dish} />
                 </div>
             </div>
         );
     }
     
-}
-
 export default Dishdetail;
