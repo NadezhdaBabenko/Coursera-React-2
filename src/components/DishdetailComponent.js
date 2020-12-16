@@ -43,7 +43,6 @@ class Dishdetail extends Component {
             commentsArr.push(<li className="mb-4 mt-4" key={dish.name + comment + i}>{comment}</li>);
             let author = dish.comments[i].author;
             let date = new Date(dish.comments[i].date);
-            
             commentsArr.push(<li className="mb-4 mt-4" key={dish.name + author + i}>-- {author}, {date.toDateString()}</li>);
         }
         return commentsArr;
@@ -71,9 +70,11 @@ class Dishdetail extends Component {
 
     render() { // любой компонент должен содержать метод Рэндэр - отрисовывает, отображает этот компонент  
         return (
-            <div className="row"> 
-                {this.renderDish(this.props.data.selectedDish)}
-                {this.renderComments(this.props.data.selectedDish)} 
+            <div className="container">
+                <div className="row"> 
+                    {this.renderDish(this.props.dish)}
+                    {this.renderComments(this.props.dish)} 
+                </div>
             </div>
         );
     }
