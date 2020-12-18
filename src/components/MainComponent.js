@@ -1,7 +1,8 @@
 import React, { Component } from "react"; // создает компонент - потом его надо импортировать в App.js
-import { Navbar, NavbarBrand } from 'reactstrap'; //компоненты Навбар и НавбарБранд
 import Menu from './MenuComponent'; //импортируем каждый компонент, указывая путь до него и потом пишешь его в коду ниже как <Menu />  
 import Dishdetail from './DishdetailComponent';
+import Header from './HeaderComponent';
+import Footer from './FooterComponent';
 import {DISHES} from '../shared/dishes'; 
 
 class Main extends Component {
@@ -23,13 +24,10 @@ class Main extends Component {
     render() {
     return (
         <div>
-            <Navbar dark color="primary">
-                <div className="container">
-                    <NavbarBrand href="/">Ristorante Con Fusion</NavbarBrand>
-                </div>
-            </Navbar>
+            <Header />
             <Menu dishes={this.state.dishes} onClick={(dishId) => this.onDishSelect(dishId)} /> 
             <Dishdetail state={this.state} dish={this.state.dishes.find((dish) => dish.id === this.state.selectedDish)} />
+            <Footer />
         </div>
     );
 } 
