@@ -49,12 +49,21 @@ render() {
             />
         );
     } 
+
+const DishWihtId = ({match}) =>{
+    return(
+        <Dishdetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
+        comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} /> // выделит все комменты которые подходят
+    );
+}
+
     return (
         <div>
             <Header />
             <Switch>
                 <Route path="/home" component={HomePage} />
-                <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} />
+                <Route exact path="/menu" component={() => <Menu dishes={this.state.dishes} />} />
+                <Route path="/menu/:dishId" component={DishWihtId} />
                 <Route exact path="/contactus" component={Contact} />
                 <Redirect to="/home" /> 
             </Switch>
