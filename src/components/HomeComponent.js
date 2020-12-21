@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 //{item.designation ? <CardSubtitle>{item.designation}</CardSubtitle>: null} - если item.designation не равно null - то нарисуй <CardSubtitle> - так как designation есть не у всех объектов, если нет designation у объекта - то null
+
 function RenderCard({item}) {
     return(
         <Card>

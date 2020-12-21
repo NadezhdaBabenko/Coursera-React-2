@@ -1,5 +1,6 @@
 import React, { Component } from "react"; // создает компонент - потом его надо импортировать в App.js
 import Home from './HomeComponent'; 
+import About from './AboutComponent';
 import Menu from './MenuComponent'; //импортируем каждый компонент, указывая путь до него и потом пишешь его в коду ниже как <Menu />  
 import Contact from './ContactComponent';
 import Dishdetail from './DishdetailComponent';
@@ -10,8 +11,6 @@ import { COMMENTS } from '../shared/comments';
 import { LEADERS } from '../shared/leaders';
 import { PROMOTIONS } from '../shared/promotions'; 
 
-
-
 import { Switch, Route, Redirect } from 'react-router-dom';  //для роутинга 
 
 class Main extends Component {
@@ -20,11 +19,10 @@ class Main extends Component {
     super(props);
 
     this.state = {
-      dishes: DISHES,
-    //   selectedDish: null
-    comments: COMMENTS,
-    promotions: PROMOTIONS,
-    leaders: LEADERS
+        dishes: DISHES,
+        comments: COMMENTS,
+        promotions: PROMOTIONS,
+        leaders: LEADERS
     };
   }
 
@@ -50,18 +48,19 @@ render() {
         );
     } 
 
-const DishWihtId = ({match}) =>{
-    return(
-        <Dishdetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
-        comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} /> // выделит все комменты которые подходят
-    );
-}
+    const DishWihtId = ({match}) =>{
+        return(
+            <Dishdetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
+            comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} /> // выделит все комменты которые подходят
+        );
+    }
 
     return (
         <div>
             <Header />
             <Switch>
                 <Route path="/home" component={HomePage} />
+                <Route path="/aboutus" component={() => <About leaders={this.state.leaders} />} />
                 <Route exact path="/menu" component={() => <Menu dishes={this.state.dishes} />} />
                 <Route path="/menu/:dishId" component={DishWihtId} />
                 <Route exact path="/contactus" component={Contact} />
