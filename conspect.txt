@@ -1,10 +1,10 @@
-Настройка реакта - установка реактстрапа и поппера
+1 Настройка реакта - установка реактстрапа и поппера
 yarn add bootstrap@4.0.0
 yarn add reactstrap@5.0.0
 yarn add react-popper@0.9.2
-https://www.coursera.org/learn/front-end-react/supplement/Cb0se/exercise-instructions-configuring-your-react-application
+2 https://www.coursera.org/learn/front-end-react/supplement/Cb0se/exercise-instructions-configuring-your-react-application
 
-class Main extends Component { //добавляет новый компонент в приложение реакт - Menu - имя компонента
+3 class Main extends Component { //добавляет новый компонент в приложение реакт - Menu - имя компонента
     constructor(props) {
         super(props); //это требуется всякий раз, когда вы определяете компонент класса
         // состояние state для моего компонента - хранит в себе свойства, относящиеся к этому компоненту, которые мы можем использовать.
@@ -15,4 +15,14 @@ class Main extends Component { //добавляет новый компонен�
 }
 render() { // любой компонент должен содержать метод Рэндэр - отрисовывает, отображает этот компонент
 
-    //https://www.pluralsight.com/guides/how-to-send-state-of-current-component-as-a-parameter-to-another-external-method-using-react
+4    //https://www.pluralsight.com/guides/how-to-send-state-of-current-component-as-a-parameter-to-another-external-method-using-react
+
+5 import React, { Component } from 'react'; - { Component }  - если прописываешь компонент как класс, а не как ф-циональный компонент (тогда все должно отрисовываться в методе РЭНДОР + возможность прописать     
+constructor(props) {
+        super(props);
+        this.state = {
+            
+        }
+    })
+
+
