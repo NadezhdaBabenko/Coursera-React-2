@@ -6,24 +6,26 @@ import Contact from './ContactComponent';
 import Dishdetail from './DishdetailComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { DISHES } from '../shared/dishes'; 
-import { COMMENTS } from '../shared/comments';
-import { LEADERS } from '../shared/leaders';
-import { PROMOTIONS } from '../shared/promotions'; 
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';  //для роутинга 
+import { connect } from 'react-redux';
 
-import { Switch, Route, Redirect } from 'react-router-dom';  //для роутинга 
+const mapStateToProps = state => { //доступны в моем Redux Store здесь. это состояние, которое я здесь получаю, является состоянием из моего Redux Store. 
+    return { //все состояния передаешь теперь как this.props
+        dishes: state.dishes,
+        comments: state.comments,
+        promotions: state. promotions, 
+        leaders: state.leaders //доступны сейчас как PROPS в MainCmp
+    }
+}
 
 class Main extends Component {
   
   constructor(props) {
     super(props);
 
-    this.state = {
-        dishes: DISHES,
-        comments: COMMENTS,
-        promotions: PROMOTIONS,
-        leaders: LEADERS
-    };
+    // this.state = {
+        // перенесено в reducer.js для отслеживания изменения состояния
+    // };
   }
 
 //onClick={() => this.onDishSelect(dish)} при клике на каждую карточку вызывается ф-ция
@@ -41,17 +43,17 @@ render() {
 
     const HomePage = () => {
         return(
-            <Home dish={this.state.dishes.filter((dish) => dish.featured)[0]}//передает состояние (state) dishes - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.dish}
-                promotion={this.state.promotions.filter((promo) => promo.featured)[0]} //передает состояние (state) promotion - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.promotion}
-                leader={this.state.leaders.filter((leader) => leader.featured)[0]} //передает состояние (state) leaders - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.leader}
+            <Home dish={this.props.dishes.filter((dish) => dish.featured)[0]}//передает состояние (state) dishes - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.dish}
+                promotion={this.props.promotions.filter((promo) => promo.featured)[0]} //передает состояние (state) promotion - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.promotion}
+                leader={this.props.leaders.filter((leader) => leader.featured)[0]} //передает состояние (state) leaders - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.leader}
             />
         );
     } 
 
     const DishWihtId = ({match}) =>{
         return(
-            <Dishdetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
-            comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} /> // выделит все комменты которые подходят
+            <Dishdetail dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
+            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} /> // выделит все комменты которые подходят
         );
     }
 
@@ -60,8 +62,8 @@ render() {
             <Header />
             <Switch>
                 <Route path="/home" component={HomePage} />
-                <Route path="/aboutus" component={() => <About leaders={this.state.leaders} />} />
-                <Route exact path="/menu" component={() => <Menu dishes={this.state.dishes} />} />
+                <Route path="/aboutus" component={() => <About leaders={this.props.leaders} />} />
+                <Route exact path="/menu" component={() => <Menu dishes={this.props.dishes} />} />
                 <Route path="/menu/:dishId" component={DishWihtId} />
                 <Route exact path="/contactus" component={Contact} />
                 <Redirect to="/home" /> 
@@ -78,4 +80,5 @@ render() {
 // <Redirect to="/home" /> //если выбирается что то другое- чего нет оно перенаправляет на страницу Хоум (вкладки меню которых еще нет)
 // </Switch> 
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main));
+
