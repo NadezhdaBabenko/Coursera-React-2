@@ -1,19 +1,20 @@
 import React from "react"; // создает компонент - потом его надо импортировать в App.js
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from "reactstrap"; 
 import { Link } from "react-router-dom";
+import CommentForm from './CommentForm';
 
     //отрисовываем и как параметр принимаем state из род. кмп
     function RenderDish({dish}) {
         if(dish != null) {
             return (
                 <div className="col-12 col-md-5 m-1">
-                <Card>
-                    <CardImg width="100%" src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                    <Card>
+                        <CardImg width="100%" src={dish.image} alt={dish.name} />
+                        <CardBody>
+                            <CardTitle>{dish.name}</CardTitle>
+                            <CardText>{dish.description}</CardText>
+                        </CardBody>
+                    </Card>
                 </div>
             );
         } 
@@ -39,6 +40,7 @@ import { Link } from "react-router-dom";
                             );
                         })}
                     </ul>
+                    <CommentForm />
                 </div>
             );
         
