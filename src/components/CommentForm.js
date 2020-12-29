@@ -14,7 +14,7 @@ class CommentForm extends Component {
             isModalOpen: false
         };
         this.toggleModal = this.toggleModal.bind(this); 
-        this.handleComment = this.handleComment.bind(this); 
+        this.handleSubmit = this.handleSubmit.bind(this); 
     }
 
     toggleModal() {
@@ -23,9 +23,10 @@ class CommentForm extends Component {
         });
     }
 
-    handleComment(event) {
+    handleSubmit(values) {
         this.toggleModal();
-        event.preventDefault();
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+        // event.preventDefault();
     }
 
     RenderComments = () => {
@@ -53,11 +54,11 @@ class CommentForm extends Component {
                             </Col>
                         </Row>
                         <Row className="form-group">
-                            <Label htmlFor="yourname" md={12}>Your Name</Label>
+                            <Label htmlFor="author" md={12}>Your Name</Label>
                             <Col md={12}>
-                                <Control.text model=".yourname" 
-                                    id="yourname" 
-                                    name="yourname"
+                                <Control.text model=".author" 
+                                    id="author" 
+                                    name="author"
                                     placeholder="Your Name"
                                     className="form-control"
                                     validators={{
@@ -65,7 +66,7 @@ class CommentForm extends Component {
                                     }} 
                                 />
                                 <Errors className="text-danger" 
-                                        model=".yourname"
+                                        model=".author"
                                         show="touched"
                                         messages={{
                                             required: 'Required',

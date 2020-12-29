@@ -8,6 +8,8 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';  //для роутинга 
 import { connect } from 'react-redux';
+import { addComment } from '../redux/ActionCreators';
+
 
 const mapStateToProps = state => { //доступны в моем Redux Store здесь. это состояние, которое я здесь получаю, является состоянием из моего Redux Store. 
     return { //все состояния передаешь теперь как this.props
@@ -17,6 +19,10 @@ const mapStateToProps = state => { //доступны в моем Redux Store з
         leaders: state.leaders //доступны сейчас как PROPS в MainCmp
     }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)) 
+});
 
 class Main extends Component {
   
@@ -53,7 +59,9 @@ render() {
     const DishWihtId = ({match}) =>{
         return(
             <Dishdetail dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
-            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} /> // выделит все комменты которые подходят
+            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} 
+            addComment={this.props.addComment}
+            /> // выделит все комменты которые подходят
         );
     }
 
@@ -80,5 +88,5 @@ render() {
 // <Redirect to="/home" /> //если выбирается что то другое- чего нет оно перенаправляет на страницу Хоум (вкладки меню которых еще нет)
 // </Switch> 
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
 
