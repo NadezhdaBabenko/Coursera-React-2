@@ -1,10 +1,19 @@
-import { createStore } from 'redux'; //позволяет мне импортировать reducer и initialState.
-import { Reducer, initialState } from './reducer';
+import { createStore, combineReducers } from 'redux'; //позволяет мне импортировать reducer и initialState.
+import { Dishes } from './dishes'; //reducer
+import { Comments } from './comments';//reducer
+import { Promotions } from './promotions';//reducer
+import { Leaders } from './leaders';//reducer
+
+
 
 export const ConfigureStore = () => {
     const store = createStore( //два параметра берем из reducer.js
-        Reducer, //саму ф-цию
-        initialState // и начальное состояние
+        combineReducers({
+            dishes: Dishes,
+            comments: Comments,
+            promotions: Promotions,
+            leaders: Leaders
+        })
     );
 
     return store;
