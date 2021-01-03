@@ -1,7 +1,7 @@
 import React from "react"; // создает компонент - потом его надо импортировать в App.js
 import { Card, CardImg, CardImgOverlay, CardTitle, Breadcrumb, BreadcrumbItem } from "reactstrap"; // импортировать медиа-компонент из reactstrap <Media> котороые мы использвем
 import { Link } from 'react-router-dom';
-
+import { Loading } from './LoadingComponent';
 
 function RenderMenuItem({ dish, onClick }) { //1вариант написания функционального компонента
     return (
@@ -18,7 +18,7 @@ function RenderMenuItem({ dish, onClick }) { //1вариант написани�
 
 const Menu = (props) => { //2 вариант написания функционального компонента
     
-    const menu = props.dishes.map((dish) => { // прохожу по всему массиву dishes и итерации по каждому dish и отрисовывает элемент
+    const menu = props.dishes.dishes.map((dish) => { // прохожу по всему массиву dishes и итерации по каждому dish и отрисовывает элемент
         return (//читай документацию reactstrap про <Media tag="li">; важно прописывать key={dish.id} для каждого элемента массива
             <div key={dish.id} className="col-12 col-md-5 m-1"> 
                 <RenderMenuItem dish={dish} />
@@ -27,23 +27,42 @@ const Menu = (props) => { //2 вариант написания функцион
     }); //Я собираюсь включить переменную JavaScript под названием {menu}, которая определяется как массив - дальше метод .map -пробегает по всем элементам массива. дальше определяется что вернется после этого метода
     //<Dishdetail data={this.state}/>  - передаешь в дочерний компонент state текущий
     
-    return ( // выводишь каждый элемент const menu
-        <div className="container"> 
-            <div className="row">
-                <Breadcrumb>
-                    <BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
-                    <BreadcrumbItem active>Menu</BreadcrumbItem>
-                </Breadcrumb>
-                <div className="col-12">
-                    <h3>Menu</h3>
-                    <hr />
+    if (props.dishes.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
                 </div>
             </div>
-            <div className="row">
-                {menu} 
+        );
+    }
+    else if(props.dishes.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{props.dishes.errMess}</h4>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
+    else 
+        return ( // выводишь каждый элемент const menu
+            <div className="container"> 
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>Menu</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>Menu</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div className="row">
+                    {menu} 
+                </div>
+            </div>
+        );
 } 
 
 // {/* <Dishdetail data={this.state}/>  */}

@@ -8,7 +8,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';  //для роутинга 
 import { connect } from 'react-redux';
-import { addComment } from '../redux/ActionCreators';
+import { addComment, fetchDishes } from '../redux/ActionCreators';
 
 
 const mapStateToProps = state => { //доступны в моем Redux Store здесь. это состояние, которое я здесь получаю, является состоянием из моего Redux Store. 
@@ -21,18 +21,23 @@ const mapStateToProps = state => { //доступны в моем Redux Store з
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)) 
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)), 
+    fetchDishes: () => {dispatch(fetchDishes())}
 });
 
 class Main extends Component {
   
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    // this.state = {
-        // перенесено в reducer.js для отслеживания изменения состояния
-    // };
-  }
+        // this.state = {
+            // перенесено в reducer.js для отслеживания изменения состояния
+        // };
+    }
+
+    componentDidMount() {// как компонент будет установлен, будет вызван метод fetchDishes()
+        this.props.fetchDishes();
+    }
 
 //onClick={() => this.onDishSelect(dish)} при клике на каждую карточку вызывается ф-ция
     // onDishSelect(dishId) {
@@ -45,42 +50,46 @@ class Main extends Component {
 //  <Dishdetail state={this.state} dish={this.state.dishes.find((dish) => dish.id === this.state.selectedDish)} /> 
 // <Switch> - для переключения - роутинг
 //<Home dish={this.state.dishes.filter((dish) => dish.featured)[0]} /> - для всех dishes у кого featured = true - выделятся эти только -> [0]-толкьо первый эемент
-render() {
+    render() {
 
-    const HomePage = () => {
-        return(
-            <Home dish={this.props.dishes.filter((dish) => dish.featured)[0]}//передает состояние (state) dishes - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.dish}
-                promotion={this.props.promotions.filter((promo) => promo.featured)[0]} //передает состояние (state) promotion - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.promotion}
-                leader={this.props.leaders.filter((leader) => leader.featured)[0]} //передает состояние (state) leaders - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.leader}
-            />
+        const HomePage = () => {
+            return(
+                <Home dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}//передает состояние (state) dishes - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.dish}
+                    dishesLoading={this.props.dishes.isLoading}
+                    dishesErrMess={this.props.dishes.errMess}
+                    promotion={this.props.promotions.filter((promo) => promo.featured)[0]} //передает состояние (state) promotion - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.promotion}
+                    leader={this.props.leaders.filter((leader) => leader.featured)[0]} //передает состояние (state) leaders - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.leader}
+                />
+            );
+        } 
+
+        const DishWihtId = ({match}) =>{
+            return(
+                <Dishdetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
+                isLoading={this.props.dishes.isLoading}
+                errMess={this.props.dishes.errMess}
+                comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} 
+                addComment={this.props.addComment}
+                /> // выделит все комменты которые подходят
+            );
+        }
+
+        return (
+            <div>
+                <Header />
+                <Switch>
+                    <Route path="/home" component={HomePage} />
+                    <Route path="/aboutus" component={() => <About leaders={this.props.leaders} />} />
+                    <Route exact path="/menu" component={() => <Menu dishes={this.props.dishes} />} />
+                    <Route path="/menu/:dishId" component={DishWihtId} />
+                    <Route exact path="/contactus" component={Contact} />
+                    <Redirect to="/home" /> 
+                </Switch>
+                <Footer />
+            </div>
         );
     } 
-
-    const DishWihtId = ({match}) =>{
-        return(
-            <Dishdetail dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
-            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} 
-            addComment={this.props.addComment}
-            /> // выделит все комменты которые подходят
-        );
     }
-
-    return (
-        <div>
-            <Header />
-            <Switch>
-                <Route path="/home" component={HomePage} />
-                <Route path="/aboutus" component={() => <About leaders={this.props.leaders} />} />
-                <Route exact path="/menu" component={() => <Menu dishes={this.props.dishes} />} />
-                <Route path="/menu/:dishId" component={DishWihtId} />
-                <Route exact path="/contactus" component={Contact} />
-                <Redirect to="/home" /> 
-            </Switch>
-            <Footer />
-        </div>
-    );
-} 
-}
 
 // <Switch> - переключение между страницами
 // <Route path="/home" component={HomePage} /> - добавляется в юрл путь - и переключается на компонент Хоум
