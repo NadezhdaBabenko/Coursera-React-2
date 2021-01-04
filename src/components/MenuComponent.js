@@ -2,12 +2,13 @@ import React from "react"; // создает компонент - потом е�
 import { Card, CardImg, CardImgOverlay, CardTitle, Breadcrumb, BreadcrumbItem } from "reactstrap"; // импортировать медиа-компонент из reactstrap <Media> котороые мы использвем
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl'; //для получение картинок с сервера
 
 function RenderMenuItem({ dish, onClick }) { //1вариант написания функционального компонента
     return (
         <Card> 
             <Link to={`/menu/${dish.id}`}>
-                <CardImg width="100%" src={dish.image} alt={dish.name} />
+                <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
                 <CardImgOverlay>
                     <CardTitle>{dish.name}</CardTitle>
                 </CardImgOverlay>

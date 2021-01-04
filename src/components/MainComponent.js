@@ -8,7 +8,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';  //для роутинга 
 import { connect } from 'react-redux';
-import { addComment, fetchDishes } from '../redux/ActionCreators';
+import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
 
 const mapStateToProps = state => { //доступны в моем Redux Store здесь. это состояние, которое я здесь получаю, является состоянием из моего Redux Store. 
@@ -23,7 +23,9 @@ const mapStateToProps = state => { //доступны в моем Redux Store з
 const mapDispatchToProps = (dispatch) => ({
     addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)), 
     fetchDishes: () => {dispatch(fetchDishes())},
-    resetFeedbackForm: () => {dispatch(actions.reset('feedback'))} //обновляет инпуты формы после отправки отзыва
+    resetFeedbackForm: () => {dispatch(actions.reset('feedback'))}, //обновляет инпуты формы после отправки отзыва
+    fetchComments: () => {dispatch(fetchComments())},
+    fetchPromos: () => {dispatch(fetchPromos())},
 });
 
 class Main extends Component {
@@ -36,8 +38,10 @@ class Main extends Component {
         // };
     }
 
-    componentDidMount() {// как компонент будет установлен, будет вызван метод fetchDishes()
+    componentDidMount() {// как компонент будет установлен, будет вызван метод fetchDishes() - получение все с сервера
         this.props.fetchDishes();
+        this.props.fetchComments();
+        this.props.fetchPromos();
     }
 
 //onClick={() => this.onDishSelect(dish)} при клике на каждую карточку вызывается ф-ция
@@ -55,23 +59,27 @@ class Main extends Component {
 
         const HomePage = () => {
             return(
-                <Home dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}//передает состояние (state) dishes - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.dish}
+                <Home 
+                    dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
                     dishesLoading={this.props.dishes.isLoading}
-                    dishesErrMess={this.props.dishes.errMess}
-                    promotion={this.props.promotions.filter((promo) => promo.featured)[0]} //передает состояние (state) promotion - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.promotion}
-                    leader={this.props.leaders.filter((leader) => leader.featured)[0]} //передает состояние (state) leaders - фильтрует и берет тот объект у которого у первого встречается ключ featured как true ---> дальше передает в HomeCmp как входящий параметр <RenderCard item={props.leader}
+                    dishErrMess={this.props.dishes.errMess}
+                    promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
+                    promoLoading={this.props.promotions.isLoading}
+                    promoErrMess={this.props.promotions.errMess}
+                    leader={this.props.leaders.filter((leader) => leader.featured)[0]}
                 />
             );
         } 
 
         const DishWihtId = ({match}) =>{
             return(
-                <Dishdetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} //выберет первый элемент с таким id
-                isLoading={this.props.dishes.isLoading}
-                errMess={this.props.dishes.errMess}
-                comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} 
-                addComment={this.props.addComment}
-                /> // выделит все комменты которые подходят
+                <Dishdetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
+                    isLoading={this.props.dishes.isLoading}
+                    errMess={this.props.dishes.errMess}
+                    comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+                    commentsErrMess={this.props.comments.errMess}
+                    addComment={this.props.addComment}
+                />
             );
         }
 
