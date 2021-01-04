@@ -2,15 +2,47 @@ import * as ActionTypes from './ActionTypes'; //import ALL ActionTypes
 import { DISHES } from '../shared/dishes'; 
 import { baseUrl } from '../shared/baseUrl';
 
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT,
-    payload: { //это JS object, которая содержит разные части комментария
+    payload: comment
+}); 
+
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+    const newComment = { //создается коммент
         dishId: dishId,
         rating: rating,
         author: author,
         comment: comment
     }
-}); 
+    newComment.date = new Date().toISOString();
+
+    return fetch(baseUrl + 'comments', {//что б отправить коммент на сервер
+        method: 'POST',
+        body: JSON.stringify(newComment), //созданный коммент помещается в тело сообщения отправки
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    })
+
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      })
+    .then(response => response.json())
+    .then(response => dispatch(addComment(response)))
+    .catch(error =>  { console.log('post comments', error.message); 
+        alert('Your comment could not be posted\nError: '+error.message); });
+};
  
 //DISHES
 export const fetchDishes = () => (dispatch) => {// THUNK - выполняет 2 отправки PROMISE
