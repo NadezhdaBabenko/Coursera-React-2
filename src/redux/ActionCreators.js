@@ -13,12 +13,27 @@ export const addComment = (dishId, rating, author, comment) => ({
 }); 
  
 //DISHES
-export const fetchDishes = () => (dispatch) => {// THUNK - выполняет 2 отправки 
+export const fetchDishes = () => (dispatch) => {// THUNK - выполняет 2 отправки PROMISE
     dispatch(dishesLoading(true)); //1 ф-ция
 
-    return fetch(baseUrl + 'dishes') //взаимодействие с сервером
+    return fetch(baseUrl + 'dishes') //взаимодействие с сервером PROMISE
+        .then(response => {//обработка ошибок #1 когда вы получаете ответ от сервера, но ответ может быть ошибкой с сервера
+            if(response.ok) {// если с ответом все ок, то отправляешь его дальше (преобразование в json)
+                return response;
+            }
+            else {//если есть ошибки, то ..
+                var error = new Error('Error ' + response.status + ' : ' + response.statusText);//создаем новый объект ошибки. status - код ошибки, statusText - описание ошибки  
+                error.response = response;
+                throw error;
+            }
+        }, 
+        error => { //обработчик ошибок #2 когда нет связи с сервером
+            var errmess = new Error(error.message);
+            throw errmess;
+        })
         .then(response => response.json())//преобразуем входящий ответ в json
-        .then(dishes => dispatch(addDishes(dishes))); //когда получаем ДИШЕС - отправляем полученное в метод addDishes
+        .then(dishes => dispatch(addDishes(dishes)))//когда получаем ДИШЕС - отправляем полученное в метод addDishes
+        .catch(error => dispatch(dishesFailed(error.message))); //отправим пойманную ошибку в метод  dishesFailed
 }
 
 export const dishesLoading = () => ({
@@ -38,8 +53,22 @@ export const addDishes = (dishes) => ({
 //COMMENTS
 export const fetchComments = () => (dispatch) => {    
     return fetch(baseUrl + 'comments')
-    .then(response => response.json())
-    .then(comments => dispatch(addComments(comments)));
+        .then(response => {
+            if (response.ok) {
+            return response;
+            } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+            }
+        },
+        error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+        })
+        .then(response => response.json())
+        .then(comments => dispatch(addComments(comments)))
+        .catch(error => dispatch(commentsFailed(error.message)));
 };
 
 export const commentsFailed = (errmess) => ({
@@ -58,8 +87,22 @@ export const fetchPromos = () => (dispatch) => {
     dispatch(promosLoading());
 
     return fetch(baseUrl + 'promotions')
-    .then(response => response.json())
-    .then(promos => dispatch(addPromos(promos)));
+        .then(response => {
+            if (response.ok) {
+            return response;
+            } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+            }
+        },
+        error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+        })
+        .then(response => response.json())
+        .then(promos => dispatch(addPromos(promos)))
+        .catch(error => dispatch(promosFailed(error.message)));
 }
 
 export const promosLoading = () => ({
