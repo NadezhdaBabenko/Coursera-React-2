@@ -3,6 +3,7 @@ import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reac
 //{item.designation ? <CardSubtitle>{item.designation}</CardSubtitle>: null} - если item.designation не равно null - то нарисуй <CardSubtitle> - так как designation есть не у всех объектов, если нет designation у объекта - то null
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform } from 'react-animation-components';
 
 function RenderCard({item, isLoading, errMess}) {//берет из MainComponent
     if (isLoading) {
@@ -17,14 +18,18 @@ function RenderCard({item, isLoading, errMess}) {//берет из MainComponent
     }
     else 
         return(
-            <Card>
-                <CardImg src={baseUrl + item.image} alt={item.name} />
-                <CardBody>
-                    <CardTitle>{item.name}</CardTitle>
-                    {item.designation ? <CardSubtitle>{item.designation}</CardSubtitle>: null}
-                    <CardText>{item.description}</CardText>
-                </CardBody>
-            </Card>
+            <FadeTransform in transformProps={{
+                exitTransform: 'scale(0.5) translateY(-50%)'
+            }}>
+                <Card>
+                    <CardImg src={baseUrl + item.image} alt={item.name} />
+                    <CardBody>
+                        <CardTitle>{item.name}</CardTitle>
+                        {item.designation ? <CardSubtitle>{item.designation}</CardSubtitle>: null}
+                        <CardText>{item.description}</CardText>
+                    </CardBody>
+                </Card>
+            </FadeTransform>
         );
 } 
 // isLoading={props.dishesLoading}  и errMess={props.dishesErrMess} берет из MainComponent
