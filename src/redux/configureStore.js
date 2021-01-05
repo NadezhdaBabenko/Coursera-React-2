@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'; //поз�
 import { createForms } from 'react-redux-form';
 import { Dishes } from './dishes'; //reducer
 import { Comments } from './comments';//reducer
+import { Feedbacks } from './feedbacks';//reducer
 import { Promotions } from './promotions';//reducer
 import { Leaders } from './leaders';//reducer
 import thunk from 'redux-thunk';
@@ -13,6 +14,7 @@ export const ConfigureStore = () => {
         combineReducers({
             dishes: Dishes,
             comments: Comments,
+            feedbacks: Feedbacks,
             promotions: Promotions,
             leaders: Leaders,
             ...createForms({
